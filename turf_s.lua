@@ -1,48 +1,3 @@
--- local discordWebhookURL = "https://discord.com/api/webhooks/864164449094336566/oqSsGOdpRrFHngmJrCpXtyo8xUnyvQ-5fMv-xUll6qbOFVepSpqE6L4xsWm3u2MAGoPU"
-
--- function sendDiscordMessage(message)
--- sendOptions = {
-    -- formFields = {
-        -- content="```"..message.."```"
-    -- },
--- }
--- fetchRemote ( discordWebhookURL, sendOptions, WebhookCallback )
--- end
-
--- function WebhookCallback(responseData) 
--- end
-
--- fetchRemote("http://checkip.dyndns.com/",function(rd,errno)
-    -- if errno == 0 and rd ~= "ERROR" then
-		-- outputDebugString("Lisans onaylanıyor...")
-        -- local ip = rd:match("<body>Current IP Address: (.-)</body>")
-        -- local server = getServerName()
-        -- local sc = "TurfDoruk"
-        -- local yazi = "["..sc.."]["..ip.."]["..server.."] %s"
-        -- callRemote ("http://castilisans.000webhostapp.com/mta/ip_kontrol.php", function(cevap)
-		-- if cevap == "ERROR" then 
-		-- outputDebugString("Lisans onaylanmadı !")
-			-- local msg = server.." adlı sunucunun "..sc.." lisansı onaylanmadı !"
-			-- sendDiscordMessage(msg)
-		-- return end
-		-- if cevap == nil then 
-		-- outputDebugString("Lisans onaylanmadı !")
-			-- local msg = server.." adlı sunucunun "..sc.." lisansı onaylanmadı !"
-			-- sendDiscordMessage(msg)
-		-- return end
-            -- if cevap then
-			-- outputDebugString("Lisans onaylandı = )")
-			-- local msg = server.." adlı sunucunun "..sc.." lisansı başarıyla onaylandı !"
-			-- sendDiscordMessage(msg)
-            -- scriptiBaslat()
-            -- end
-            -- callRemote ("http://castilisans.000webhostapp.com/mta/startlog.php", function() end,string.format(yazi,cevap and "Kontrol Saglandi" or "Kontrol Saglanmadi"))
-        -- end, sc,ip )
-    -- end
--- end)
-
--- function scriptiBaslat()
-
 local RadarAreasTurf = {};
 local RadarAreaColTurf = {};
 local MainDB = dbConnect("sqlite", "TurfDB.db");
@@ -106,7 +61,6 @@ for i, M in ipairs(AreaPosition) do
 			local r1, g1, b1 = RadarAreasTurf[Area]["Loyalty"][1][3][1], RadarAreasTurf[Area]["Loyalty"][1][3][2], RadarAreasTurf[Area]["Loyalty"][1][3][3]
 			local oB = RadarAreasTurf[Area]["Loyalty"][2][1]
 			local LB = RadarAreasTurf[Area]["Loyalty"][2][2]
-			setElementData(player, "turf:etkin", true)
 			local r2, g2, b2 = RadarAreasTurf[Area]["Loyalty"][2][3][1], RadarAreasTurf[Area]["Loyalty"][2][3][2], RadarAreasTurf[Area]["Loyalty"][2][3][3]
 			if oA ~= "" and LA > 0 then player:setData("TurfStat1", {oA..": "..LA.."%", {r1, g1, b1}}) else player:setData("TurfStat1", false) end
 			if oB ~= "" and LB > 0 then player:setData("TurfStat2", {oB..": "..LB.."%", {r2, g2, b2}}) else player:setData("TurfStat2", false) end
@@ -119,9 +73,6 @@ for i, M in ipairs(AreaPosition) do
 			if getElementData(player, "megaziplama") then
 				killPed(player)
 			end
-			if getElementData(player,"oyuncugod.durum") == true then 
-				killPed(player)
-			end
 		end
 	end, false);
 	addEventHandler("onColShapeLeave", TurfAreaCol,
@@ -129,9 +80,6 @@ for i, M in ipairs(AreaPosition) do
 		if getElementType(player) == "player" then
 			player:setData("TurfStat1", false);
 			player:setData("TurfStat2", false);
-			setTimer(function()
-			setElementData(player, "turf:etkin", false)
-			end, 3000, 1)
 		end
 	end, false);
 end
@@ -407,30 +355,9 @@ function convertNumber ( number )
 end
 
 function puanVer(G,X)
-	if X == 4 then
-	print("4")
+	if X >= 7 then
 	points = getGroupTurfPoints(G)
 	setGroupTurfPoints(G, points+1)
-	end
-	if X == 5 then
-	print("5")
-	points = getGroupTurfPoints(G)
-	setGroupTurfPoints(G, points+2)
-	end
-	if X == 6 then
-	print("6")
-	points = getGroupTurfPoints(G)
-	setGroupTurfPoints(G, points+3)
-	end
-	if X == 7 then
-	print("7")
-	points = getGroupTurfPoints(G)
-	setGroupTurfPoints(G, points+4)
-	end
-	if X == 8 then
-	print("8")
-	points = getGroupTurfPoints(G)
-	setGroupTurfPoints(G, points+5)
 	end
 end
 
@@ -442,33 +369,15 @@ setTimer(function()
 		gMoneyTime = 0
 		for G, X in pairs(getGroupsTurf(50)[1]) do
 			local OnlineMember = getGroupOnlineMember(G)
-			if getPlayerCount() < 20 then outputChatBox("Sunucuda kişi sayısı 20 ve altı olduğunda turf gelirleri kapatılır.", root, 255,0,0, true) return end 
-					MoneyPerOnlineMember = X*50
+			if getPlayerCount() < 20 then outputChatBox("Sunucuda kişi sayısı 20 ve altı olduğunda turf gelirleri kapatılır.", root, 255,0,0, true) return end
+					MoneyPerOnlineMember = X*15000
+					
 					puanVer(G,X)
 			for i, player in ipairs(OnlineMember) do
-				local x, y, z = getElementPosition(player)
-				if getZoneName(x, y, z, true) == "Las Venturas" then
-					
-					local altini = getElementData(player, "altin") or 0
-					setElementData(player, "altin", tonumber(altini)+tonumber(MoneyPerOnlineMember))
-					
-					exports.GTIhud:dm("[Turf] Bölgelerinizden "..MoneyPerOnlineMember.." miktarda altın kazandınız.", player, 219, 0, 0, true)
+					exports.GTIhud:dm("[Turf] Bölgelerinizden $"..MoneyPerOnlineMember.." kazandınız.", player, 219, 0, 0, true)
 					exports.GTIhud:dm("[Turf] Bölgelerinizden "..X.." puan kazandınız.", player, 219, 0, 0, true)
+					givePlayerMoney (player, MoneyPerOnlineMember)
 					triggerClientEvent(player, "gTurfSound", player)
-					
-					local hesap = getAccountName(getPlayerAccount(player))
-					for _, v in ipairs(exports.mysql:query("SELECT * FROM hesap")) do
-						if hesap == v.Kullanici_adi then 
-							if v.turf_puan == false then
-								exports.mysql:exec("UPDATE hesap SET turf_puan=? WHERE Kullanici_adi=?", X, hesap)
-							else
-								exports.mysql:exec("UPDATE hesap SET turf_puan=?, altin=? WHERE Kullanici_adi=?", v.turf_puan+X, getElementData(player, "altin"), hesap)
-							end
-						end
-					end
-					else 
-					exports.GTIhud:dm("[Turf] Las Venturas şehrinde olmadığınız için turf parası alamıyorsunuz !", player, 219, 0, 0, true)
-				end
 			end
 		end
 	end
@@ -528,7 +437,7 @@ setTimer(function()
 									triggerEvent("onGroupTurf", player, Group)
 									for i, player in ipairs(getGroupOnlineMember(Group)) do
 										exports.GTIhud:dm("[Turf] Artık bölge sizin kontrolünüzde!", player, 219, 0, 0, true);
-										-- exports.GTIhud:dm("[Turf] Çevrimiçi Klan üyeleri her 5 dakikada bir $400 kazanacak.", player, 219, 0, 0, true);
+										exports.GTIhud:dm("[Turf] Çevrimiçi Klan üyeleri her 5 dakikada bir $400 kazanacak.", player, 219, 0, 0, true);
 										playSoundFrontEnd(player, 101);
 									end
 								elseif LA == 100 and not RadarAreasTurf[Area]["Spawn"][1] then
@@ -540,7 +449,7 @@ setTimer(function()
 									for i, player in ipairs(getGroupOnlineMember(Group)) do
 										triggerEvent("onGroupTurf", player, Group);
 										exports.GTIhud:dm("[Turf] Artık bölge sizin kontrolünüzde!", player, 219, 0, 0, true);
-										-- exports.GTIhud:dm("[Turf] Çevrimiçi Klan üyeleri her 5 dakikada bir $2000 kazanacak.", player, 219, 0, 0, true);
+										exports.GTIhud:dm("[Turf] Çevrimiçi Klan üyeleri her 5 dakikada bir $2000 kazanacak.", player, 219, 0, 0, true);
 										playSoundFrontEnd(player, 101);
 									end
 								elseif LB == 100 and not RadarAreasTurf[Area]["Spawn"][1] then
@@ -551,7 +460,7 @@ setTimer(function()
 							if oA == "" and oB == "" then
 								RadarAreasTurf[Area]["Loyalty"][1][1] = Group
 								RadarAreasTurf[Area]["Loyalty"][1][2] = RadarAreasTurf[Area]["Loyalty"][1][2] + 1
-								local color = getGroupTurfColor(Group);
+								local color = exports.ATA_Klan:getGroupTurfColor(Group);
 								local r, g, b = color[1], color[2], color[3]
 								RadarAreasTurf[Area]["Loyalty"][1][3][1] = r
 								RadarAreasTurf[Area]["Loyalty"][1][3][2] = g
@@ -622,7 +531,7 @@ setTimer(function()
 			if oB ~= "" and LB > 0 then player:setData("TurfStat2", {oB..": "..LB.."%", {r2, g2, b2}}) else player:setData("TurfStat2", false) end
 		end
 	end
-end, 6000, 0);
+end, 5000, 0);
 
 komutlar = {
 	["sp"] = true,
@@ -653,71 +562,16 @@ end)
 
 
 addEventHandler( "onPlayerWasted", getRootElement( ),
-	function(ammo, attacker, weapon, bodypart)
-	if getElementData(source, "turf:etkin") == true then
+	function()
+	if getElementData(source, "TurfStat1") == true then
 		local hesap = getAccountName(getPlayerAccount(source))
-		
-		
-		if ( attacker ) then
-		local hesap_atk = getAccountName(getPlayerAccount(attacker))
-		if ( getElementType ( attacker ) == "player" ) then
-		for _, v in ipairs(exports.mysql:query("SELECT * FROM hesap")) do
-		    if hesap_atk == v.Kullanici_adi then 
-			if tonumber(v.saat) < 50 then return end
-			if getElementData(source, "Group") == getElementData(attacker, "Group") then  return end
-			if v.turf_kill == false then
-				exports.mysql:exec("UPDATE hesap SET turf_kill=?, kills=? WHERE Kullanici_adi=?", 1, 1, hesap_atk)
-			else
-                exports.mysql:exec("UPDATE hesap SET turf_kill=?, kills=? WHERE Kullanici_adi=?", v.turf_kill+1, v.kills+1, hesap_atk)
-				local kill = v.turf_kill
-				local death = v.turf_death
-				local kd_toplam = kill/death
-				if kd_toplam <= 0.4 then 
-					if v.rutbe == "masum" then return end
-					exports.mysql:exec("UPDATE hesap SET rutbe=? WHERE Kullanici_adi=?", "masum", hesap_atk)
-				elseif kd_toplam > 0.4 and kd_toplam <= 0.7 then
-					if v.rutbe == "katil" then return end
-					exports.mysql:exec("UPDATE hesap SET rutbe=? WHERE Kullanici_adi=?", "katil", hesap_atk)
-				elseif kd_toplam > 0.7 and kd_toplam <= 1 then
-					if v.rutbe == "serikatil" then return end
-					exports.mysql:exec("UPDATE hesap SET rutbe=? WHERE Kullanici_adi=?", "serikatil", hesap_atk)
-				elseif kd_toplam > 1 and kd_toplam <= 1.4 then
-					if v.rutbe == "destansi" then return end
-					exports.mysql:exec("UPDATE hesap SET rutbe=? WHERE Kullanici_adi=?", "destansi", hesap_atk)
-				elseif kd_toplam > 1.4 then
-					if v.rutbe == "efsanevi" then return end
-					exports.mysql:exec("UPDATE hesap SET rutbe=? WHERE Kullanici_adi=?", "efsanevi", hesap_atk)
-				end
-			end
-		    end
-			
-			if hesap == v.Kullanici_adi then 
-			
-			if v.turf_death == false then
-				exports.mysql:exec("UPDATE hesap SET turf_death=?, death=? WHERE Kullanici_adi=?", 1, 1, hesap)
-			else
-                exports.mysql:exec("UPDATE hesap SET turf_death=?, death=? WHERE Kullanici_adi=?", v.turf_death+1, v.death+1, hesap)
-			end
-			
-		    end		
-	    end
-	    end
-		
-		else
-		
 		 for _, v in ipairs(exports.mysql:query("SELECT * FROM hesap")) do
 		    if hesap == v.Kullanici_adi then 
-			if v.turf_death == false then
-				exports.mysql:exec("UPDATE hesap SET turf_death=?, death=? WHERE Kullanici_adi=?", 1, 1, hesap)
-			else
-                exports.mysql:exec("UPDATE hesap SET turf_death=?, death=? WHERE Kullanici_adi=?", v.turf_death+1, v.death+1, hesap)
-				end
+                exports.mysql:exec("UPDATE hesap SET turf_death=? WHERE Kullanici_adi=?", v.turf_death+1, hesap)
 		    end
 	    end
-		end
 		end
 		removeElementData(source, "TurfStat1")
 		removeElementData(source, "TurfStat2")
 	end
 )
--- end
