@@ -1,47 +1,3 @@
-﻿-- local discordWebhookURL = "https://discord.com/api/webhooks/864164449094336566/oqSsGOdpRrFHngmJrCpXtyo8xUnyvQ-5fMv-xUll6qbOFVepSpqE6L4xsWm3u2MAGoPU"
-
--- function sendDiscordMessage(message)
--- sendOptions = {
-    -- formFields = {
-        -- content="```"..message.."```"
-    -- },
--- }
--- fetchRemote ( discordWebhookURL, sendOptions, WebhookCallback )
--- end
-
--- function WebhookCallback(responseData) 
--- end
-
--- fetchRemote("http://checkip.dyndns.com/",function(rd,errno)
-    -- if errno == 0 and rd ~= "ERROR" then
-		-- outputDebugString("Lisans onaylanıyor...")
-        -- local ip = rd:match("<body>Current IP Address: (.-)</body>")
-        -- local server = getServerName()
-        -- local sc = "KlanPanelDoruk"
-        -- local yazi = "["..sc.."]["..ip.."]["..server.."] %s"
-        -- callRemote ("http://castilisans.000webhostapp.com/mta/ip_kontrol.php", function(cevap)
-		-- if cevap == "ERROR" then 
-		-- outputDebugString("Lisans onaylanmadı !")
-			-- local msg = server.." adlı sunucunun "..sc.." lisansı onaylanmadı !"
-			-- sendDiscordMessage(msg)
-		-- return end
-		-- if cevap == nil then 
-		-- outputDebugString("Lisans onaylanmadı !")
-			-- local msg = server.." adlı sunucunun "..sc.." lisansı onaylanmadı !"
-			-- sendDiscordMessage(msg)
-		-- return end
-            -- if cevap then
-			-- outputDebugString("Lisans onaylandı = )")
-			-- local msg = server.." adlı sunucunun "..sc.." lisansı başarıyla onaylandı !"
-			-- sendDiscordMessage(msg)
-            -- scriptiBaslat()
-            -- end
-            -- callRemote ("http://castilisans.000webhostapp.com/mta/startlog.php", function() end,string.format(yazi,cevap and "Kontrol Saglandi" or "Kontrol Saglanmadi"))
-        -- end, sc,ip )
-    -- end
--- end)
-
--- function scriptiBaslat()
 	local data = data()
 	db = dbConnect("sqlite", "database.db")
 	dbExec(db, "CREATE TABLE IF NOT EXISTS groups (group_name, group_members INT, members_limit, group_info, group_bank INT, turf_color, chat_color, tag_color, group_owner, turf_points INT, kill_points INT, KlanTag, klan_sahibi)")
@@ -145,5 +101,3 @@ function oyuncucikti()
 	end
 end
 addEventHandler("onPlayerQuit", getRootElement(), oyuncucikti)
-
--- end
