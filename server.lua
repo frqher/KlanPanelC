@@ -1273,38 +1273,6 @@ function (GroupName, AccountName, AccountPassword)
 end
 )
 
-addCommandHandler("klanlarisil1530", function()
-	tbl = {}
-	for i, v in ipairs(dbPoll(dbQuery(db, "SELECT * FROM `groups`"), -1)) do
-	table.insert(tbl, {v})
-	end
-	for i2,v2 in pairs(tbl) do
-	local kodlar = unpack(v2)
-	if 8 > kodlar["group_members"] then
-	dbExec(db, "DELETE FROM groups WHERE group_name = ?", kodlar["group_name"])
-	dbExec(db, "DELETE FROM group_ranks WHERE group_name = ?", kodlar["group_name"])
-	dbExec(db, "DELETE FROM group_members WHERE group_name = ?", kodlar["group_name"])
-	dbExec(db, "DELETE FROM group_invite WHERE group_name = ?", kodlar["group_name"])
-	dbExec(db, "DELETE FROM group_history WHERE group_name = ?", kodlar["group_name"])
-	dbExec(db, "DELETE FROM group_blackaccount WHERE group_name = ?", kodlar["group_name"])
-	dbExec(db, "DELETE FROM group_blackserial WHERE group_name = ?", kodlar["group_name"])
-	end
-	end
-end)
-
-addCommandHandler("puanlarisil1530", function()
-	tbl = {}
-	for i, v in ipairs(dbPoll(dbQuery(db, "SELECT * FROM `groups`"), -1)) do
-	table.insert(tbl, {v})
-	end
-	for i2,v2 in pairs(tbl) do
-	local kodlar = unpack(v2)
-	if 0 < kodlar["turf_points"] then
-	dbExec(db, "UPDATE groups SET turf_points=? WHERE group_name = ?", 0, kodlar["group_name"])
-	end
-	end
-end)
-
 function getGroupFounderAccount(group)
 	if group and IsGroupExists(group) then
 		local h = dbQuery(db, "SELECT group_owner FROM groups WHERE group_name = ?", group)
@@ -1601,36 +1569,3 @@ function (GroupName, member)
 	triggerClientEvent("set_Group_Manager_Blacklist_Account", source, Accounts)
 end
 )
-
-addEventHandler("onPlayerLogin", getRootElement(), function ()
-	local hesap = getPlayerAccount ( source )
-	local klanTagDurum = getAccountData(hesap, "KlanTagiEtkin")
-	if hesap then
-		if getAccountData(hesap, "KlanTagiEtkin") == true then
-		local durum = getAccountData(hesap, "KlanTagiEtkin")
-		triggerClientEvent(source,"KlanTags",source,durum)
-		end
-	end
-end)
-
-
-
-addEvent("blip:olusutur", true)
-addEventHandler("blip:olusutur", getRootElement(), function (x, y, z, klan)
-	for _, player in ipairs(getElementsByType("player")) do
-	if getElementData(player, "Group") == false then return end
-		if getElementData(player, "Group") == klan then  
-		triggerClientEvent(player, "blip:olustur", player, source, x, y, z, klan)
-		end
-	end
-end)
-
-addEvent("blip:kaldir", true)
-addEventHandler("blip:kaldir", getRootElement(), function (klan)
-	for _, player in ipairs(getElementsByType("player")) do
-		if getElementData(player, "Group") == false then return end
-		if getElementData(player, "Group") == klan then  
-		triggerClientEvent(player, "blip:kaldir", player, source)
-		end
-	end
-end)
