@@ -1,0 +1,23 @@
+<meta>
+	<script src="panel.lua" type="client" cache="false"/>
+	<script src="server.lua" type="server" />
+	<script src="database.lua" type="server" />
+	<script src="client.lua" type="client" cache="false"/>	
+	<script src="turf_c.lua" type="client" cache="false"/>	
+	<script src="turf_s.lua" />
+	<file src="ara.png" />
+	<file src="ses.mp3" />
+    <export function="sdas"/>
+	<export function="getGroupTurfColor"/>
+	<export function="getGroupChatColor"/>
+	<export function="getGroupChatTagColor"/>
+	<export function="getGroupTurfPoints" />
+	<export function="setGroupTurfPoints" />
+	<export function="isAccountBlocked" />
+	<export function="isSerialBlocked" /> 
+	<export function="getPlayerGroupRank" />
+	<export function="getGroupTagName" />
+	
+	<oop>true</oop>
+  <min_mta_version server="1.5.4-9.11413" client="1.5.2-9.07903" />
+</meta>
